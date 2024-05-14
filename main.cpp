@@ -5,6 +5,7 @@
 #include <cctype>
 #include <unordered_map> 
 #include <ctime>
+#include <regex>
 using namespace std;
 
 string eventSevereLevel(string s) {
@@ -22,16 +23,32 @@ string eventSevereLevel(string s) {
 	umap["DoS_attack"] = "Critical";
 }
 
+string extractIPAdd(string s) {
+	string pattern = "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b";
+	string IP_Add;
+	regex expression(pattern);
+	smatch match;
+
+	if (regex_search(s, match, expression)) {
+		IP_Add = match.str(); //method of smatch class, allows access of matched substring as a string
+	}
+	return IP_Add;
+}
+
 class logData {
 public:
-	string eventName, eventSeverity, hostIP, protocol;
+	string eventName, eventSeverity, sourceIP,protocol;
 	time_t eventTime;
 	int source_port;
 	int destination_port;
-	logData(string eN, string hIP) {
-		eventName = eN;
-		eventSeverity = eventSevereLevel(eventName);
-		hostIP = hIP;
+	logData(string log) {
+		//eventName = eN;
+		//eventSeverity = eventSevereLevel(eventName);
+		sourceIP = extractIPAdd(log);
+	}
+
+	void display() {
+		cout << "Source IP = " << sourceIP << endl;
 	}
 };
 
@@ -55,18 +72,15 @@ public:
 		return (bucket + p) % p;
 	}
 
-	logData filterLog(string s) {
-
-	}
-
 	void insert(string log) {
 		
 	}
 };
 
 int main() {
-	logData l("Failed Login", "10.0.0.1"), l1("Failed Login", "192.168.1.11");
-	hashTable h;
+	logData l("Authentication failure : User 'admin' failed to log in from IP address 192.168.1.10.");
+	l.display();
+	/*hashTable h;
 	cout << h.hashFunction(l) << endl;
-	cout << h.hashFunction(l1) << endl;
+	cout << h.hashFunction(l1) << endl;*/
 }
