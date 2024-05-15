@@ -11,44 +11,72 @@ using namespace std;
 string eventSevereLevel(string s) {
 	//Built in Hash Table
 	unordered_map<string, string> umap;
-	umap["failed_login_attempts"] = "Moderate";
-	umap["application_access_denied"] = "Moderate";
-	umap["port_scan"] = "Severe";
-	umap["suspicious_extension"] = "Moderate";
-	umap["blacklisted_IP_address"] = "Severe";
-	umap["unusual_activity"] = "Severe";
-	umap["unauthorized_IP_address"] = "Severe";
-	umap["unusual termination for active user"] = "Extremely Severe";
-	umap["log integrity check failed"] = "Extremely Severe";
-	umap["DoS_attack"] = "Critical";
+	umap["Authentication failure"] = "Moderate";
+	umap["Access denied"] = "Moderate";
+	umap["Network intrusion detected"] = "Severe";
+	umap["Suspicious activity"] = "Moderate";
+	umap["Security alert"] = "Severe";
+	umap["Anomalous behavior"] = "Severe";
+	umap["Unauthorized access attempt"] = "Moderate";
+	umap["Security breach"] = "Extremely Severe";
+	umap["Denial of Service (DoS) attack detected"] = "Critical";
+	umap["Login failure"] = "Moderate";
+
+	return umap[s];
 }
 
-string extractIPAdd(string s) {
-	string pattern = "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b";
-	string IP_Add;
-	regex expression(pattern);
+void extractIPAdd(string s, string*& sIP, string*& dIP) {
+	regex pattern(R"(\b(?:\d{1,3}\.){3}\d{1,3}\b)");
 	smatch match;
 
-	if (regex_search(s, match, expression)) {
-		IP_Add = match.str(); //method of smatch class, allows access of matched substring as a string
+	while (regex_search(s, match, pattern)) {
+		if (sIP) {
+			sIP = new string(match[0]);
+		}
+		s = match.suffix().str();  // Update string to ignore preceding elements
+		if (regex_search(s, match, pattern)) {
+			if (dIP) {
+				dIP = new string(match[0]);
+			}
+		}
+		break;
 	}
-	return IP_Add;
+}
+
+string extractEventName(string s) {
+	size_t colonPos = s.find(":");
+	if (colonPos != string::npos) {
+		return s.substr(0, colonPos);
+	}
+	return "";
 }
 
 class logData {
 public:
-	string eventName, eventSeverity, sourceIP,protocol;
+	string eventName, eventSeverity, protocol;
 	time_t eventTime;
 	int source_port;
 	int destination_port;
+	string* sourceIP;
+	string* destIP;
 	logData(string log) {
-		//eventName = eN;
-		//eventSeverity = eventSevereLevel(eventName);
-		sourceIP = extractIPAdd(log);
+		eventName = extractEventName(log);
+		eventSeverity = eventSevereLevel(eventName);
+		sourceIP = new string;
+		destIP = new string;
+		extractIPAdd(log, sourceIP, destIP);
 	}
 
 	void display() {
-		cout << "Source IP = " << sourceIP << endl;
+		cout << "Event Name = " << eventName << endl;
+		cout << "Event Severity = " << eventSeverity << endl;
+		cout << "Source IP = " << *sourceIP << endl;
+		cout << "Destination IP = " << *destIP << endl;
+	}
+	
+	~logData() {
+		delete sourceIP;
+		delete destIP;
 	}
 };
 
@@ -78,7 +106,7 @@ public:
 };
 
 int main() {
-	logData l("Authentication failure : User 'admin' failed to log in from IP address 192.168.1.10.");
+	logData l("Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321");
 	l.display();
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;
