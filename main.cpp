@@ -43,10 +43,44 @@ void extractIPAdd(string s, string*& sIP, string*& dIP) {
 	}
 }
 
-string extractEventName(string s) {
+//string extractEventName(string s) {
+//	size_t colonPos = s.find(":"); //returns index
+//	if (colonPos != string::npos) { //index isn't invalid
+//		string res = s.substr(0, colonPos);
+//		if (res != "ERROR" && res != "WARNING" && res != "INFO" && res != "DEBUG") return res;
+//	}
+//	return "";
+//}
+
+string extractEventName(string s, string*& time) {
+	// Combine timestamp and event name patterns
+	regex timestamp_pattern(R"(\*\*\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\*\*)");
+	smatch match;
+
+	if (regex_search(s, match, timestamp_pattern)) {
+		time = new string(match[0].str());
+		s = s.substr(match[0].length()); // string after timestamp
+	}
+
 	size_t colonPos = s.find(":");
 	if (colonPos != string::npos) {
-		return s.substr(0, colonPos);
+		// Find the first non-timestamp character before the colon
+		size_t startPos = s.find_first_not_of("**0123456789:- ", 0);
+		if (startPos < colonPos) {
+			return s.substr(startPos, colonPos - startPos); // Extract event name excluding timestamp
+		}
+	}
+	return "";
+}
+
+string extractEventProtocol(string s) {
+	size_t pos = s.find("TCP");
+	if (pos != string::npos) {
+		return "TCP";
+	}
+	pos = s.find("UDP");
+	if (pos != string::npos) {
+		return "UDP";
 	}
 	return "";
 }
@@ -54,24 +88,29 @@ string extractEventName(string s) {
 class logData {
 public:
 	string eventName, eventSeverity, protocol;
-	time_t eventTime;
+	string* eventTime;
 	int source_port;
 	int destination_port;
 	string* sourceIP;
 	string* destIP;
 	logData(string log) {
-		eventName = extractEventName(log);
-		eventSeverity = eventSevereLevel(eventName);
 		sourceIP = new string;
 		destIP = new string;
+		eventTime = new string;
+		eventName = extractEventName(log, eventTime);
+		if (eventName == "") return; //avoid calling functions
+		eventSeverity = eventSevereLevel(eventName);
 		extractIPAdd(log, sourceIP, destIP);
+		protocol = extractEventProtocol(log);
 	}
 
 	void display() {
+		cout << "Timestamp = " << *eventTime << endl;
 		cout << "Event Name = " << eventName << endl;
 		cout << "Event Severity = " << eventSeverity << endl;
 		cout << "Source IP = " << *sourceIP << endl;
 		cout << "Destination IP = " << *destIP << endl;
+		cout << "Protocol = " << protocol << endl;
 	}
 	
 	~logData() {
@@ -106,7 +145,7 @@ public:
 };
 
 int main() {
-	logData l("Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321");
+	logData l("**2024-05-16 02:31:00** Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321");
 	l.display();
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;

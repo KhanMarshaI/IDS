@@ -1,6 +1,6 @@
 INFO: System boot successful. Timestamp: 2024-05-13 08:00:00 127.0.0.1 127.0.0.1 TCP 22 54321
 WARNING: Disk space running low. Free space: 10% N/A N/A N/A N/A N/A
-ERROR: Failed to establish connection to database server. 192.168.1.100 192.168.1.10 TCP 54321 54321
+ERROR: Failed to establish connection to database server. 192.168.1.100 192.168.1.10 UDP 54321 54321
 Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321
 INFO: Application server started successfully. 127.0.0.1 127.0.0.1 TCP 80 54321
 DEBUG: Processing request from IP address 203.0.113.5 192.168.1.10 TCP 80 54321
