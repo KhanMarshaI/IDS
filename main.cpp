@@ -21,23 +21,23 @@ string eventSevereLevel(string s) {
 	umap["Security breach"] = "Extremely Severe";
 	umap["Denial of Service (DoS) attack detected"] = "Critical";
 	umap["Login failure"] = "Moderate";
+	umap["ERROR"] = "Low";
+	umap["DEBUG"] = "None";
+	umap["INFO"] = "None";
+	umap["WARNING"] = "None";
 
 	return umap[s];
 }
 
-void extractIPAdd(string s, string*& sIP, string*& dIP) {
+void extractIPAdd(string s, string& sIP, string& dIP) {
 	regex pattern(R"(\b(?:\d{1,3}\.){3}\d{1,3}\b)");
 	smatch match;
 
 	while (regex_search(s, match, pattern)) {
-		if (sIP) {
-			sIP = new string(match[0]);
-		}
+		sIP = match[0];
 		s = match.suffix().str();  // Update string to ignore preceding elements
 		if (regex_search(s, match, pattern)) {
-			if (dIP) {
-				dIP = new string(match[0]);
-			}
+			dIP = match[0];
 		}
 		break;
 	}
@@ -52,14 +52,14 @@ void extractIPAdd(string s, string*& sIP, string*& dIP) {
 //	return "";
 //}
 
-string extractEventName(string s, string*& time) {
+string extractEventName(string s, string& time) {
 	// Combine timestamp and event name patterns
-	regex timestamp_pattern(R"(\*\*\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\*\*)");
+	regex timestamp_pattern(R"(\*\*(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\*\*)");
 	smatch match;
 
 	if (regex_search(s, match, timestamp_pattern)) {
-		time = new string(match[0].str());
-		s = s.substr(match[0].length()); // string after timestamp
+		time = match[1].str();
+		s = s.substr(match.position() + match.length()); // String after timestamp
 	}
 
 	size_t colonPos = s.find(":");
@@ -73,49 +73,47 @@ string extractEventName(string s, string*& time) {
 	return "";
 }
 
-string extractEventProtocol(string s) {
-	size_t pos = s.find("TCP");
-	if (pos != string::npos) {
-		return "TCP";
+void extractEventProtocol(string s, string& protocol, string& sourcePort, string& destPort) {
+	regex pattern(R"((TCP|UDP)\s+(\d+(-\d+)?)\s+(\d+(-\d+)?))");
+	smatch match;
+
+	if (regex_search(s, match, pattern)) {
+		protocol = match[1].str();                
+		sourcePort = match[2].str();        
+		destPort = match[4].str(); 
 	}
-	pos = s.find("UDP");
-	if (pos != string::npos) {
-		return "UDP";
+	else {
+		protocol = "";
+		sourcePort = "";
+		destPort = "";
 	}
-	return "";
 }
 
 class logData {
 public:
 	string eventName, eventSeverity, protocol;
-	string* eventTime;
-	int source_port;
-	int destination_port;
-	string* sourceIP;
-	string* destIP;
+	string eventTime;
+	string source_port;
+	string destination_port;
+	string sourceIP;
+	string destIP;
 	logData(string log) {
-		sourceIP = new string;
-		destIP = new string;
-		eventTime = new string;
 		eventName = extractEventName(log, eventTime);
 		if (eventName == "") return; //avoid calling functions
 		eventSeverity = eventSevereLevel(eventName);
 		extractIPAdd(log, sourceIP, destIP);
-		protocol = extractEventProtocol(log);
+		extractEventProtocol(log, protocol, source_port, destination_port);
 	}
 
 	void display() {
-		cout << "Timestamp = " << *eventTime << endl;
+		cout << "Timestamp = " << eventTime << endl;
 		cout << "Event Name = " << eventName << endl;
 		cout << "Event Severity = " << eventSeverity << endl;
-		cout << "Source IP = " << *sourceIP << endl;
-		cout << "Destination IP = " << *destIP << endl;
+		cout << "Source IP = " << sourceIP << endl;
+		cout << "Destination IP = " << destIP << endl;
 		cout << "Protocol = " << protocol << endl;
-	}
-	
-	~logData() {
-		delete sourceIP;
-		delete destIP;
+		cout << "Source Port = " << source_port << endl;
+		cout << "Destination Port = " << destination_port << endl;
 	}
 };
 
@@ -145,7 +143,7 @@ public:
 };
 
 int main() {
-	logData l("**2024-05-16 02:31:00** Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321");
+	logData l("**2024-05-16 02:31:00** INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
 	l.display();
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;
