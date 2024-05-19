@@ -1,11 +1,15 @@
 #include <iostream>
-#include <list>
-#include <algorithm>
+#include <list> //hashTable
+#include <algorithm> //hashTable insertion
 #include <string>
-#include <cctype>
+#include <cctype> //tolower
 #include <unordered_map> 
 #include <ctime>
-#include <regex>
+#include <sstream> //parsetime func
+#include <iomanip> //parsetime func
+#include <fstream>
+#include <vector>
+#include <regex> //pattern Matching
 using namespace std;
 
 string eventSevereLevel(string s) {
@@ -52,13 +56,32 @@ void extractIPAdd(string s, string& sIP, string& dIP) {
 //	return "";
 //}
 
-string extractEventName(string s, string& time) {
+time_t parseTime(string& timestamp) {
+	std::tm tm = { 0 };  // Initialize tm structure to zero
+	std::istringstream ss(timestamp);
+	ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");  // Parse the string into tm structure
+
+	if (ss.fail()) {
+		throw runtime_error("Failed to parse time");
+	}
+
+	return mktime(&tm);  // Convert tm structure to time_t
+}
+
+string formatTime(time_t time) {
+	char buffer[26];
+	ctime_s(buffer, sizeof(buffer), &time);
+	return string(buffer);
+}
+
+string extractEventName(string s, time_t& time) {
 	// Combine timestamp and event name patterns
 	regex timestamp_pattern(R"((\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}))");
 	smatch match;
 
 	if (regex_search(s, match, timestamp_pattern)) {
-		time = match[1].str();
+		string t = match[1].str();
+		time = parseTime(t);
 		s = s.substr(match.position() + match.length()); // String after timestamp
 	}
 
@@ -92,7 +115,7 @@ void extractEventProtocol(string s, string& protocol, string& sourcePort, string
 class logData {
 public:
 	string eventName, eventSeverity, protocol;
-	string eventTime;
+	time_t eventTime;
 	string source_port;
 	string destination_port;
 	string sourceIP;
@@ -106,14 +129,14 @@ public:
 	}
 
 	void display() {
-		cout << "Timestamp = " << eventTime << endl;
+		cout << "Timestamp = " << formatTime(eventTime); // ctime function does \n on its own
 		cout << "Event Name = " << eventName << endl;
 		cout << "Event Severity = " << eventSeverity << endl;
 		cout << "Source IP = " << sourceIP << endl;
 		cout << "Destination IP = " << destIP << endl;
 		cout << "Protocol = " << protocol << endl;
 		cout << "Source Port = " << source_port << endl;
-		cout << "Destination Port = " << destination_port << endl;
+		cout << "Destination Port = " << destination_port << endl << endl;
 	}
 };
 
@@ -142,10 +165,40 @@ public:
 	}
 };
 
+vector<logData> readLogs() {
+	string line;
+	string path;
+	vector<logData> logs;
+
+	cout << "Enter path to read logs from (including file name): ";
+	cin >> path;
+
+	ifstream file(path);
+	if (!file.is_open()) {
+		throw runtime_error("Failed to open file.");
+	}
+	while (getline(file, line)) {
+		logData l(line);
+		logs.push_back(l);
+	}
+
+	file.close();
+	return logs;
+}
+
+void displayVecLogs(vector<logData>& log) {
+	for (int i = 0; i < log.size(); i++) {
+		log[i].display();
+	}
+}
+
 int main() {
-	logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
-	l.display();
+	/*logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
+	l.display();*/
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;
 	cout << h.hashFunction(l1) << endl;*/
+
+	vector<logData> logs = readLogs();
+	displayVecLogs(logs);
 }
