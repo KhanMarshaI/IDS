@@ -54,7 +54,7 @@ void extractIPAdd(string s, string& sIP, string& dIP) {
 
 string extractEventName(string s, string& time) {
 	// Combine timestamp and event name patterns
-	regex timestamp_pattern(R"(\*\*(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\*\*)");
+	regex timestamp_pattern(R"((\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}))");
 	smatch match;
 
 	if (regex_search(s, match, timestamp_pattern)) {
@@ -65,7 +65,7 @@ string extractEventName(string s, string& time) {
 	size_t colonPos = s.find(":");
 	if (colonPos != string::npos) {
 		// Find the first non-timestamp character before the colon
-		size_t startPos = s.find_first_not_of("**0123456789:- ", 0);
+		size_t startPos = s.find_first_not_of("0123456789:- ", 0);
 		if (startPos < colonPos) {
 			return s.substr(startPos, colonPos - startPos); // Extract event name excluding timestamp
 		}
@@ -143,7 +143,7 @@ public:
 };
 
 int main() {
-	logData l("**2024-05-16 02:31:00** INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
+	logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
 	l.display();
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;

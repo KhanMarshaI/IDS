@@ -1,32 +1,32 @@
-**2024-05-16 02:31:00** INFO: System boot successful. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** WARNING: Disk space running low. Free space: 10% N/A N/A N/A N/A N/A
-**2024-05-16 02:31:00** ERROR: Failed to establish connection to database server. 192.168.1.100 192.168.1.10 UDP 54321 54321
-**2024-05-16 02:31:00** Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321
-**2024-05-16 02:31:00** INFO: Application server started successfully. 127.0.0.1 127.0.0.1 TCP 80 54321
-**2024-05-16 02:31:00** DEBUG: Processing request from IP address 203.0.113.5 192.168.1.10 TCP 80 54321
-**2024-05-16 02:31:00** Access denied: User 'john_doe' attempted to access restricted resource 'finance_report.pdf'. 192.168.1.10 192.168.1.10 TCP 443 54321
-**2024-05-16 02:31:00** INFO: New user account created: 'jane_doe'. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Network intrusion detected: Port scan detected from IP address 203.0.113.5 192.168.1.10 TCP 1-1024 54321
-**2024-05-16 02:31:00** ERROR: Database query execution failed. 192.168.1.100 192.168.1.10 TCP 5432 54321
-**2024-05-16 02:31:00** INFO: Scheduled backup completed successfully. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Suspicious activity: File 'invoice.exe' with unknown signature detected in system directory. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Security alert: Connection blocked from blacklisted IP address 172.16.0.2 192.168.1.10 TCP 1-1024 54321
-**2024-05-16 02:31:00** INFO: Application server stopped. 127.0.0.1 127.0.0.1 TCP 80 54321
-**2024-05-16 02:31:00** Anomalous behavior: Unusual spike in outbound network traffic from host 10.0.0.5 192.168.1.10 TCP 1-1024 54321
-**2024-05-16 02:31:00** Unauthorized access attempt: Invalid login attempt detected for user 'root' from IP address 192.168.0.1 192.168.0.1 TCP 22 54321
-**2024-05-16 02:31:00** INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Critical system error: Unexpected termination of critical system process 'kernel'. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Security breach: Log tampering detected in system log file '/var/log/messages'. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** INFO: Server restarted due to system maintenance. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Denial of Service (DoS) attack detected: SYN flood attack from IP address 198.51.100.3 192.168.1.10 TCP 1-1024 54321
-**2024-05-16 02:31:00** INFO: Application server load balanced successfully. 127.0.0.1 127.0.0.1 TCP 80 54321
-**2024-05-16 02:31:00** Login failure: User 'guest' failed to log in from IP address 192.0.2.10 192.0.2.10 TCP 22 54321
-**2024-05-16 02:31:00** Access denied: User 'manager' attempted to access sensitive database 'customer_records'. 192.168.1.10 192.168.1.10 TCP 443 54321
-**2024-05-16 02:31:00** INFO: Network interface reset. 127.0.0.1 127.0.0.1 TCP 22 54321
-**2024-05-16 02:31:00** Network intrusion detected: Port scan detected from IP address 172.31.0.5 192.168.1.10 TCP 1-1024 54321
-**2024-05-16 02:31:00** INFO: New security patch applied. 127.0.0.1 127.0
-**2024-05-16 02:31:00** INFO: User 'bob' logged in successfully from IP address 192.168.1.25 192.168.1.10 TCP 22 54321
-**2024-05-16 02:31:00** ERROR: Database connection timeout. 192.168.1.100 192.168.1.10 TCP 5432 54321
-**2024-05-16 02:31:00** INFO: New software update available. 127.0.0.1 127.0.0.1 TCP 80 54321
-**2024-05-16 02:31:00** Security alert: Suspicious activity detected from IP address 203.0.113.10 192.168.1.10 TCP 1-1024 54321
-**2024-05-16 02:31:00** INFO: System disk usage: 80% 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 INFO: System boot successful. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 WARNING: Disk space running low. Free space: 10% N/A N/A N/A N/A N/A
+2024-05-16 02:31:00 ERROR: Failed to establish connection to database server. 192.168.1.100 192.168.1.10 UDP 54321 54321
+2024-05-16 02:31:00 Authentication failure: User 'admin' failed to log in from IP address 192.168.1.10 192.168.1.20 TCP 22 54321
+2024-05-16 02:31:00 INFO: Application server started successfully. 127.0.0.1 127.0.0.1 TCP 80 54321
+2024-05-16 02:31:00 DEBUG: Processing request from IP address 203.0.113.5 192.168.1.10 TCP 80 54321
+2024-05-16 02:31:00 Access denied: User 'john_doe' attempted to access restricted resource 'finance_report.pdf'. 192.168.1.10 192.168.1.10 TCP 443 54321
+2024-05-16 02:31:00 INFO: New user account created: 'jane_doe'. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Network intrusion detected: Port scan detected from IP address 203.0.113.5 192.168.1.10 TCP 1-1024 54321
+2024-05-16 02:31:00 ERROR: Database query execution failed. 192.168.1.100 192.168.1.10 TCP 5432 54321
+2024-05-16 02:31:00 INFO: Scheduled backup completed successfully. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Suspicious activity: File 'invoice.exe' with unknown signature detected in system directory. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Security alert: Connection blocked from blacklisted IP address 172.16.0.2 192.168.1.10 TCP 1-1024 54321
+2024-05-16 02:31:00 INFO: Application server stopped. 127.0.0.1 127.0.0.1 TCP 80 54321
+2024-05-16 02:31:00 Anomalous behavior: Unusual spike in outbound network traffic from host 10.0.0.5 192.168.1.10 TCP 1-1024 54321
+2024-05-16 02:31:00 Unauthorized access attempt: Invalid login attempt detected for user 'root' from IP address 192.168.0.1 192.168.0.1 TCP 22 54321
+2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Critical system error: Unexpected termination of critical system process 'kernel'. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Security breach: Log tampering detected in system log file '/var/log/messages'. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 INFO: Server restarted due to system maintenance. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Denial of Service (DoS) attack detected: SYN flood attack from IP address 198.51.100.3 192.168.1.10 TCP 1-1024 54321
+2024-05-16 02:31:00 INFO: Application server load balanced successfully. 127.0.0.1 127.0.0.1 TCP 80 54321
+2024-05-16 02:31:00 Login failure: User 'guest' failed to log in from IP address 192.0.2.10 192.0.2.10 TCP 22 54321
+2024-05-16 02:31:00 Access denied: User 'manager' attempted to access sensitive database 'customer_records'. 192.168.1.10 192.168.1.10 TCP 443 54321
+2024-05-16 02:31:00 INFO: Network interface reset. 127.0.0.1 127.0.0.1 TCP 22 54321
+2024-05-16 02:31:00 Network intrusion detected: Port scan detected from IP address 172.31.0.5 192.168.1.10 TCP 1-1024 54321
+2024-05-16 02:31:00 INFO: New security patch applied. 127.0.0.1 127.0
+2024-05-16 02:31:00 INFO: User 'bob' logged in successfully from IP address 192.168.1.25 192.168.1.10 TCP 22 54321
+2024-05-16 02:31:00 ERROR: Database connection timeout. 192.168.1.100 192.168.1.10 TCP 5432 54321
+2024-05-16 02:31:00 INFO: New software update available. 127.0.0.1 127.0.0.1 TCP 80 54321
+2024-05-16 02:31:00 Security alert: Suspicious activity detected from IP address 203.0.113.10 192.168.1.10 TCP 1-1024 54321
+2024-05-16 02:31:00 INFO: System disk usage: 80% 127.0.0.1 127.0.0.1 TCP 22 54321
