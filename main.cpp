@@ -145,12 +145,16 @@ class hashTable {
 	int size;
 public:
 	hashTable() {
-		size = 10;
+		size = 14;
 		hash = new list<logData>[size];
 	}
 
+	~hashTable() {
+		delete hash;
+	}
+
 	const int chars = 256; //Number of chars in input
-	const int p = 11; //any prime number
+	const int p = 15; //any prime number
 	int hashFunction(logData l) {
 		int bucket = 0;
 		int len = l.eventName.length();
@@ -160,8 +164,19 @@ public:
 		return (bucket + p) % p;
 	}
 
-	void insert(string log) {
-		
+	void insert(logData log) {
+		int idx = hashFunction(log);
+		hash[idx].push_back(log);
+	}
+
+	void display() {
+		for (int i = 0; i < size; i++) {
+			cout << i << ": ";
+			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
+				cout << it->eventName << ", ";
+			}
+			cout << endl;
+		}
 	}
 };
 
@@ -192,13 +207,26 @@ void displayVecLogs(vector<logData>& log) {
 	}
 }
 
+hashTable vecToHTable(vector<logData>& v) {
+	hashTable h;
+	for (int i = 0; i < v.size(); i++) {
+		h.insert(v[i]);
+	}
+	return h;
+}
+
 int main() {
-	/*logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
-	l.display();*/
+	logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
+	l.display();
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;
 	cout << h.hashFunction(l1) << endl;*/
 
 	vector<logData> logs = readLogs();
-	displayVecLogs(logs);
+	//displayVecLogs(logs);
+	//hashTable h = vecToHTable(logs);
+	hashTable h;
+	h.insert(l);
+	h.display();
+	//h.display();
 }
