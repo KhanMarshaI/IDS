@@ -150,11 +150,12 @@ public:
 	}
 
 	~hashTable() {
-		delete hash;
+		delete[] hash;
 	}
 
 	const int chars = 256; //Number of chars in input
-	const int p = 15; //any prime number
+	const int p = 14; // same as size only used in hashFunction
+	// making p = size will crash the program
 	int hashFunction(logData l) {
 		int bucket = 0;
 		int len = l.eventName.length();
@@ -170,12 +171,54 @@ public:
 	}
 
 	void display() {
+		if (hash->empty()) {
+			cout << "Empty Table" << endl;
+			return;
+		}
 		for (int i = 0; i < size; i++) {
 			cout << i << ": ";
 			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
 				cout << it->eventName << ", ";
 			}
 			cout << endl;
+		}
+	}
+
+	void searchByName() {
+		string en;
+		cout << "Enter event name: ";
+		getline(cin >> ws, en);
+		for (int i = 0; i < size; i++) {
+			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
+				if (it->eventName.compare(en) == 0) {
+					it->display();
+				}
+			}
+		}
+	}
+
+	void searchBySeverity() {
+		string s;
+		cout << "Enter Severity: ";
+		cin >> s;
+		for (int i = 0; i < size; i++) {
+			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
+				if (it->eventSeverity.compare(s) == 0) {
+					it->display();
+				}
+			}
+		}
+	}
+
+	void displayAll() {
+		if (hash->empty()) {
+			cout << "Empty Table" << endl;
+			return;
+		}
+		for (int i = 0; i < size; i++) {
+			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
+				it->display();
+			}
 		}
 	}
 };
@@ -187,10 +230,15 @@ vector<logData> readLogs() {
 
 	cout << "Enter path to read logs from (including file name): ";
 	cin >> path;
+	int len = path.length();
+	if (!path.empty() && path[0] == '"' && path[len-1] == '"') {
+		path = path.substr(1, path.size() - 2);
+	}
 
 	ifstream file(path);
 	if (!file.is_open()) {
-		throw runtime_error("Failed to open file.");
+		cout << "Fail to open file" << endl;
+		return logs;
 	}
 	while (getline(file, line)) {
 		logData l(line);
@@ -216,17 +264,16 @@ hashTable vecToHTable(vector<logData>& v) {
 }
 
 int main() {
-	logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
-	l.display();
+	//logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
+	//l.display();
 	/*hashTable h;
 	cout << h.hashFunction(l) << endl;
 	cout << h.hashFunction(l1) << endl;*/
 
 	vector<logData> logs = readLogs();
 	//displayVecLogs(logs);
-	//hashTable h = vecToHTable(logs);
-	hashTable h;
-	h.insert(l);
+	hashTable h = vecToHTable(logs);
 	h.display();
+	h.searchBySeverity();
 	//h.display();
 }
