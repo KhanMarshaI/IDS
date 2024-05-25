@@ -12,23 +12,25 @@
 #include <regex> //pattern Matching
 using namespace std;
 
-string eventSevereLevel(string s) {
+enum severity { None = 0, Low = 1, Moderate = 2, Severe = 3, Critical = 4 };
+static severity eventSevereLevel(string s) {
 	//Built in Hash Table
-	unordered_map<string, string> umap;
-	umap["Authentication failure"] = "Moderate";
-	umap["Access denied"] = "Moderate";
-	umap["Network intrusion detected"] = "Severe";
-	umap["Suspicious activity"] = "Moderate";
-	umap["Security alert"] = "Severe";
-	umap["Anomalous behavior"] = "Severe";
-	umap["Unauthorized access attempt"] = "Moderate";
-	umap["Security breach"] = "Extremely Severe";
-	umap["Denial of Service (DoS) attack detected"] = "Critical";
-	umap["Login failure"] = "Moderate";
-	umap["ERROR"] = "Low";
-	umap["DEBUG"] = "None";
-	umap["INFO"] = "None";
-	umap["WARNING"] = "None";
+	
+	unordered_map<string, severity> umap;
+	umap["Authentication failure"] = Moderate;
+	umap["Access denied"] = Moderate;
+	umap["Network intrusion detected"] = Severe;
+	umap["Suspicious activity"] = Moderate;
+	umap["Security alert"] = Severe;
+	umap["Anomalous behavior"] = Severe;
+	umap["Unauthorized access attempt"] = Moderate;
+	umap["Security breach"] = Critical;
+	umap["Denial of Service (DoS) attack detected"] = Critical;
+	umap["Login failure"] = Moderate;
+	umap["ERROR"] = Low;
+	umap["DEBUG"] = None;
+	umap["INFO"] = None;
+	umap["WARNING"] = None;
 
 	return umap[s];
 }
@@ -114,7 +116,8 @@ void extractEventProtocol(string s, string& protocol, string& sourcePort, string
 
 class logData {
 public:
-	string eventName, eventSeverity, protocol;
+	string eventName, protocol;
+	severity eventSeverity;
 	time_t eventTime;
 	string source_port;
 	string destination_port;
@@ -128,10 +131,33 @@ public:
 		extractEventProtocol(log, protocol, source_port, destination_port);
 	}
 
+	string intToSeverity(severity e) {
+		switch (e) {
+		case 0:
+			return "None";
+			break;
+		case 1:
+			return "Low";
+			break;
+		case 2: 
+			return "Moderate";
+			break;
+		case 3:
+			return "Severe";
+			break;
+		case 4:
+			return "Critical";
+			break;
+		default:
+			return "";
+			break;
+		}
+	}
+
 	void display() {
 		cout << "Timestamp = " << formatTime(eventTime); // ctime function does \n on its own
 		cout << "Event Name = " << eventName << endl;
-		cout << "Event Severity = " << eventSeverity << endl;
+		cout << "Event Severity = " << intToSeverity(eventSeverity) << endl;
 		cout << "Source IP = " << sourceIP << endl;
 		cout << "Destination IP = " << destIP << endl;
 		cout << "Protocol = " << protocol << endl;
@@ -165,6 +191,15 @@ public:
 		return (bucket + p) % p;
 	}
 
+	int hashFunction(string s) {
+		int bucket = 0;
+		int len = s.length();
+		for (int i = 0; i < len; i++) {
+			bucket = (bucket * chars + tolower(s[i])) % p;
+		}
+		return (bucket + p) % p;
+	}
+
 	void insert(logData log) {
 		int idx = hashFunction(log);
 		hash[idx].push_back(log);
@@ -186,24 +221,23 @@ public:
 
 	void searchByName() {
 		string en;
-		cout << "Enter event name: ";
+		cout << "Enter event name (case-sensitive): ";
 		getline(cin >> ws, en);
-		for (int i = 0; i < size; i++) {
-			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
-				if (it->eventName.compare(en) == 0) {
-					it->display();
-				}
+		int idx = hashFunction(en);
+		for (auto it = hash[idx].begin(); it != hash[idx].end(); it++) {
+			if (it->eventName.compare(en) == 0) {
+				it->display();
 			}
 		}
 	}
 
 	void searchBySeverity() {
-		string s;
+		int s;
 		cout << "Enter Severity: ";
 		cin >> s;
 		for (int i = 0; i < size; i++) {
 			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
-				if (it->eventSeverity.compare(s) == 0) {
+				if (it->eventSeverity == s) {
 					it->display();
 				}
 			}
@@ -220,6 +254,46 @@ public:
 				it->display();
 			}
 		}
+	}
+	
+	int partition(vector<logData>& arr, int low, int high)
+	{
+		int pivot = arr[high].eventSeverity;
+		int i = (low - 1);
+
+		for (int j = low; j <= high; j++)
+		{
+			if (arr[j].eventSeverity > pivot)
+			{
+				i++;
+				swap(arr[i], arr[j]);
+			}
+		}
+		swap(arr[i + 1], arr[high]);
+		return (i + 1);
+	}
+
+
+	void quickSort(vector<logData>& arr, int low, int high)
+	{
+		if (low < high)
+		{
+			int pi = partition(arr, low, high);
+			quickSort(arr, low, pi - 1);
+			quickSort(arr, pi + 1, high);
+		}
+	}
+
+	void sortBySeverity(vector<logData>& v) {
+		if (v.empty()) return;
+		/*for (int i = 0; i < v.size(); i++) {
+			for (int j = i + 1; j < v.size(); j++) {
+				if (v[i].eventSeverity > v[j].eventSeverity) {
+					swap(v[i], v[j]);
+				}
+			}
+		}*/
+		quickSort(v, 0, v.size() - 1);
 	}
 };
 
@@ -274,6 +348,7 @@ int main() {
 	//displayVecLogs(logs);
 	hashTable h = vecToHTable(logs);
 	h.display();
-	h.searchBySeverity();
+	h.sortBySeverity(logs);
+	displayVecLogs(logs);
 	//h.display();
 }
