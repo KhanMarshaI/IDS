@@ -1,15 +1,4 @@
-#include <iostream>
-#include <list> //hashTable
-#include <algorithm> //hashTable insertion
-#include <string>
-#include <cctype> //tolower
-#include <unordered_map> 
-#include <ctime>
-#include <sstream> //parsetime func
-#include <iomanip> //parsetime func
-#include <fstream>
-#include <vector>
-#include <regex> //pattern Matching
+#include "stdafx.h"
 using namespace std;
 
 enum severity { None = 0, Low = 1, Moderate = 2, Severe = 3, Critical = 4 };
@@ -233,8 +222,9 @@ public:
 
 	void searchBySeverity() {
 		int s;
-		cout << "Enter Severity: ";
+		cout << "Enter Severity: (0-4)";
 		cin >> s;
+
 		for (int i = 0; i < size; i++) {
 			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
 				if (it->eventSeverity == s) {
@@ -337,18 +327,66 @@ hashTable vecToHTable(vector<logData>& v) {
 	return h;
 }
 
-int main() {
-	//logData l("2024-05-16 02:31:00 INFO: System update installed. Version: 2.1.0 127.0.0.1 127.0.0.1 TCP 22 54321");
-	//l.display();
-	/*hashTable h;
-	cout << h.hashFunction(l) << endl;
-	cout << h.hashFunction(l1) << endl;*/
-
+void menu() {
+	cout << "Marshal's Intrusion Detection System - V1.0" << endl;
 	vector<logData> logs = readLogs();
-	//displayVecLogs(logs);
 	hashTable h = vecToHTable(logs);
-	h.display();
-	h.sortBySeverity(logs);
-	displayVecLogs(logs);
-	//h.display();
+
+	int choice;
+	while (1) {
+		system("cls");
+		cout << "Marshal's Intrusion Detection System - V1.0" << endl;
+		cout << "Select the operation to perform." << endl;
+		cout << "1. Display Raw Hash Table." << endl;
+		cout << "2. Display All Network Events." << endl;
+		cout << "3. Sort Network Events. (By Severity)" << endl;
+		cout << "4. Display sorted Network Events." << endl;
+		cout << "5. Search Network Events By Name." << endl;
+		cout << "6. Search Network Events By Severity." << endl;
+		cout << "7. Exit." << endl;
+		cin >> choice;
+		switch (choice) {
+		case 1:
+			system("cls"); //same as running cls on terminal
+			h.display();
+			_getch(); //mvsc compiler produces error on getch so prefix it with "_"
+			break;
+		case 2:
+			system("cls");
+			h.displayAll();
+			_getch();
+			break;
+		case 3:
+			system("cls");
+			h.sortBySeverity(logs);
+			cout << "Sorted." << endl;
+			_getch();
+			break;
+		case 4:
+			system("cls");
+			displayVecLogs(logs);
+			_getch();
+			break;
+		case 5:
+			system("cls");
+			h.searchByName();
+			_getch();
+			break;
+		case 6:
+			system("cls");
+			h.searchBySeverity();
+			_getch();
+			break;
+		case 7:
+			cout << "Exiting..." << endl;
+			return;
+		default:
+			cout << "Incorrect choice." << endl;
+			break;
+		}
+	}
+}
+
+int main() {
+	menu();
 }
