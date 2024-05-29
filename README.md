@@ -21,7 +21,7 @@ converts them into a vector, and then into a hash table for efficient processing
 5. Search Network Events By Name
 - Allows users to search for specific events by their name.
 - Facilitates quick retrieval and analysis of particular events.
-7. Search Network Events By Severity
+6. Search Network Events By Severity
 - Enables searching for events based on their severity.
 - Helps focus on events of a particular criticality.
 ---
