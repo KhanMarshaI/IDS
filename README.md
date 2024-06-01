@@ -1,8 +1,7 @@
 # Intrusion Detection System
 ## Overview
 
-This project is an Intrusion Detection System (IDS) that leverages Data Structures and Algorithms (DSA) to process and analyze network logs. The system reads network logs from a **`.txt`** file, 
-converts them into a vector, and then into a hash table for efficient processing. The IDS provides various features to display, sort, and search network events, enhancing the ability to detect and analyze potential intrusions.
+This project is an Intrusion Detection System (IDS) that leverages Data Structures and Algorithms to process and analyze network logs. The system reads network logs from a **`.txt`** file, converts them into a vector (later that vector is used for sorting), and then into a hash table for efficient processing. The IDS provides various features to display, sort, and search network events, enhancing the ability to detect and analyze potential intrusions.
 
 ---
 # Functionality Details
@@ -24,6 +23,9 @@ converts them into a vector, and then into a hash table for efficient processing
 6. Search Network Events By Severity
 - Enables searching for events based on their severity.
 - Helps focus on events of a particular criticality.
+7. Summarize Network Events.
+- Gives a total count of all event occurrences.
+- Gives a overview of inidividual event severity counts.
 ---
 # File Structure
 1. **`main.cpp`** includes all the code. (I acknowledge that the classes should had their own header files)
