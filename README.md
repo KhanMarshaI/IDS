@@ -4,6 +4,12 @@
 This project is an Intrusion Detection System (IDS) that leverages Data Structures and Algorithms to process and analyze network logs. The system reads network logs from a **`.txt`** file, converts them into a vector (later that vector is used for sorting), and then into a hash table for efficient processing. The IDS provides various features to display, sort, and search network events, enhancing the ability to detect and analyze potential intrusions.
 
 ---
+
+# Showcase
+![image](https://github.com/KhanMarshaI/IDS/assets/108894019/060a49f9-8cf1-46db-92ad-797ef66280a0)
+![image](https://github.com/KhanMarshaI/IDS/assets/108894019/f10b7d6f-a510-4bb9-9ce6-63c2bafb5221)
+
+---
 # Functionality Details
 1. Display Raw Hash Table
 - Displays the raw hash table for debugging and verification purposes.
