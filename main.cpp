@@ -2,7 +2,7 @@
 using namespace std;
 
 enum severity { None = 0, Low = 1, Moderate = 2, Severe = 3, Critical = 4 };
-static severity eventSevereLevel(string s) {
+severity eventSevereLevel(string s) {
 	//Built in Hash Table
 	
 	unordered_map<string, severity> umap;
@@ -158,6 +158,8 @@ public:
 class hashTable {
 	list<logData>* hash;
 	int size;
+	int count;
+	int low_c, mod_c, sev_c, crit_c, none_c;
 public:
 	hashTable() {
 		size = 14;
@@ -192,6 +194,7 @@ public:
 	void insert(logData log) {
 		int idx = hashFunction(log);
 		hash[idx].push_back(log);
+		count++;
 	}
 
 	void display() {
@@ -285,6 +288,39 @@ public:
 		}*/
 		quickSort(v, 0, v.size() - 1);
 	}
+
+	void updateEventCount() {
+		for (int i = 0; i < size; i++) {
+			for (auto it = hash[i].begin(); it != hash[i].end(); it++) {
+				switch (it->eventSeverity) {
+				case 0:
+					none_c++;
+					break;
+				case 1:
+					low_c++;
+					break;
+				case 2:
+					mod_c++;
+					break;
+				case 3:
+					sev_c++;
+					break;
+				case 4:
+					crit_c++;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	void summarize() {
+		updateEventCount();
+		cout << "Total number of events: " << count << endl;
+		cout << "Critical Events: " << crit_c << "\t" << "Severe Events: " << sev_c << "\t" << "Moderate Events: " << mod_c
+			<< "\t" << "Low Events: " << low_c << "\t" << "None Events: " << none_c << endl;
+	}
 };
 
 vector<logData> readLogs() {
@@ -343,7 +379,8 @@ void menu() {
 		cout << "4. Display sorted Network Events." << endl;
 		cout << "5. Search Network Events By Name." << endl;
 		cout << "6. Search Network Events By Severity." << endl;
-		cout << "7. Exit." << endl;
+		cout << "7. Summarize." << endl;
+		cout << "8. Exit." << endl;
 		cin >> choice;
 		switch (choice) {
 		case 1:
@@ -378,6 +415,11 @@ void menu() {
 			_getch();
 			break;
 		case 7:
+			system("cls");
+			h.summarize();
+			_getch();
+			break;
+		case 8:
 			cout << "Exiting..." << endl;
 			return;
 		default:
